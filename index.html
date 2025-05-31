@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Consider replacing vite.svg with a static favicon link or removing if not needed -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Designer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background-color: #0f172a; /* bg-slate-900 */
+        color: #f1f5f9; /* text-slate-100 */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      /* Additional styles for aspect ratio if Tailwind JIT isn't fully picking it up from classes in JS strings */
+      .aspect-w-4 { --tw-aspect-w: 4; }
+      .aspect-h-3 { --tw-aspect-h: 3; }
+      .aspect-w-4 > * {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .aspect-h-3 > * {
+         padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
+      }
+      .aspect-w-4.aspect-h-3 > :first-child {
+        padding-bottom: 75%; /* 3/4 */
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <main class="flex-grow">
+      <!-- Hero Section Placeholder -->
+      <div id="hero-section-container"></div>
+
+      <!-- Portfolio Gallery Placeholder -->
+      <div id="portfolio-gallery-container"></div>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-container"></div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const appData = {
+          mainImageUrl: "https://res.cloudinary.com/duzlathfu/image/upload/v1747910898/buddha_purnima__fbeveg.jpg",
+          heroTitle: "Creative Digital Design",
+          heroSubtitle: "Visualizing Ideas, Crafting Experiences",
+          heroCtaText: "View My Work",
+          heroCtaLink: "#portfolio",
+          portfolioImages: [
+            { id: '1', src: "https://res.cloudinary.com/duzlathfu/image/upload/v1747911786/bloom_and_leaf_dzfp3k.jpg", alt: "Bloom and Leaf Design" },
+            { id: '2', src: "https://res.cloudinary.com/duzlathfu/image/upload/v1747983599/3admission_ohl3zk.jpg", alt: "Admission Brochure Design" },
+            { id: '3', src: "https://res.cloudinary.com/duzlathfu/image/upload/v1747983600/85_oxford_study_in_oxford_aeqdme.jpg", alt: "Study Material Design" },
+            { id: '4', src: "https://res.cloudinary.com/duzlathfu/image/upload/v1747984037/38_study_in_uk_rlwjop.jpg", alt: "Study in UK Campaign" },
+          ],
+          designerName: "Your Name" // Replace "Your Name"
+        };
+
+        function renderHero() {
+          const { mainImageUrl, heroTitle, heroSubtitle, heroCtaText, heroCtaLink } = appData;
+          let ctaButtonHtml = '';
+          if (heroCtaText && heroCtaLink) {
+            ctaButtonHtml = `
+              <div class="mt-8 md:mt-10">
+                <a
+                  href="${heroCtaLink}"
+                  class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 px-8 rounded-lg text-lg shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75"
+                >
+                  ${heroCtaText}
+                </a>
+              </div>
+            `;
+          }
+
+          let scrollDownArrowHtml = '';
+          if (heroCtaLink === "#portfolio") {
+            scrollDownArrowHtml = `
+              <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+                <a href="${heroCtaLink}" aria-label="Scroll to portfolio section">
+                    <svg class="w-8 h-8 text-slate-300 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </a>
+              </div>
+            `;
+          }
+
+          const heroHtml = `
+            <header
+              class="relative h-[calc(100vh-5rem)] md:h-screen flex items-center justify-center bg-cover bg-center"
+              style="background-image: url('${mainImageUrl}');"
+              aria-labelledby="hero-title"
+            >
+              <div class="absolute inset-0 bg-slate-900 opacity-60"></div>
+              <div class="relative z-10 text-center px-4 py-8">
+                <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg">
+                  ${heroTitle}
+                </h1>
+                <p class="mt-4 md:mt-6 text-lg sm:text-xl md:text-2xl text-slate-200 max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto drop-shadow-md">
+                  ${heroSubtitle}
+                </p>
+                ${ctaButtonHtml}
+              </div>
+              ${scrollDownArrowHtml}
+            </header>
+          `;
+          document.getElementById('hero-section-container').innerHTML = heroHtml;
+        }
+
+        function renderPortfolioGallery() {
+          const { portfolioImages } = appData;
+          let imagesHtml = '';
+          if (portfolioImages.length > 0) {
+            imagesHtml = portfolioImages.map((image, index) => `
+              <div
+                key="${image.id}"
+                class="group relative overflow-hidden rounded-lg shadow-xl aspect-w-4 aspect-h-3 bg-slate-700"
+              >
+                <img
+                  src="${image.src}"
+                  alt="${image.alt}"
+                  class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                  loading="${index > 1 ? "lazy" : "eager"}"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="absolute bottom-0 left-0 p-4 md:p-6">
+                    <h3 class="text-lg md:text-xl font-semibold text-white drop-shadow-sm">${image.alt}</h3>
+                  </div>
+                </div>
+              </div>
+            `).join('');
+          } else {
+            imagesHtml = '<p class="text-center text-slate-400">No portfolio items to display yet.</p>';
+          }
+
+          const portfolioHtml = `
+            <section id="portfolio" class="py-16 md:py-24 bg-slate-800">
+              <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+                <div class="text-center mb-12 md:mb-16">
+                  <h2 class="text-3xl md:text-4xl font-bold text-white">
+                    My <span class="text-cyan-400">Work</span>
+                  </h2>
+                  <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
+                    A glimpse into my creative projects and design capabilities.
+                  </p>
+                </div>
+                ${portfolioImages.length > 0 ? `
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 md:gap-8">
+                    ${imagesHtml}
+                  </div>
+                ` : imagesHtml}
+              </div>
+            </section>
+          `;
+          document.getElementById('portfolio-gallery-container').innerHTML = portfolioHtml;
+        }
+
+        function renderFooter() {
+          const { designerName } = appData;
+          const currentYear = new Date().getFullYear();
+          const footerHtml = `
+            <footer class="bg-slate-900 border-t border-slate-700 py-8">
+              <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-slate-400 text-sm">
+                  &copy; ${currentYear} ${designerName}. All rights reserved.
+                </p>
+                <p class="text-slate-500 text-xs mt-2">
+                  Powered by Creativity & Code
+                </p>
+              </div>
+            </footer>
+          `;
+          document.getElementById('footer-container').innerHTML = footerHtml;
+        }
+
+        renderHero();
+        renderPortfolioGallery();
+        renderFooter();
+      });
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
